@@ -13,7 +13,7 @@ debug.bat
 ```
 
 ## Manuell ausführen
-### Starten des Lastenausgleichs
+### Starten des Lastenausgleichs (Master)
 
 Der Lastenausgleich verteilt Client-Anfragen auf mehrere Serverinstanzen. Führen Sie die folgenden Schritte aus, um den Lastenausgleich zu starten:
 
@@ -31,7 +31,7 @@ javac LoadBalancer.java
 java LoadBalancer
 ```
 
-### Starten der Serverinstanzen
+### Starten der Serverinstanzen (Worker)
 
 Sie können mehrere Serverinstanzen starten, um Client-Anfragen zu bearbeiten. Jeder Server wird auf einem anderen Port ausgeführt. Führen Sie die folgenden Schritte aus:
 
