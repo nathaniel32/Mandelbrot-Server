@@ -1,4 +1,6 @@
+import java.rmi.Naming;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 
 import javax.swing.BoxLayout;
@@ -246,10 +248,12 @@ public class Server extends UnicastRemoteObject implements ServerInterface, Acti
                 InetAddress localhost = InetAddress.getLocalHost();
                 String currentIP = localhost.getHostAddress(); //"0.0.0.0";
                 String link = "rmi://" + currentIP + ":" + serverPort + "/WorkerServer";
+
+                LocateRegistry.createRegistry(serverPort);
+                Naming.rebind(link, server);
     
                 //java.rmi.registry.LocateRegistry.createRegistry(serverPort).rebind(link, server); geht nicht!
                 //java.rmi.registry.LocateRegistry.createRegistry(serverPort).rebind("WorkerServer", server);
-                java.rmi.registry.LocateRegistry.createRegistry(serverPort).rebind("WorkerServer", server);
     
                 server.setUrl(link);
                 server.setGUI(loadbalancer, server);

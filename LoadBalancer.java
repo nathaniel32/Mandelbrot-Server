@@ -1,4 +1,7 @@
+import java.net.InetAddress;
+import java.rmi.Naming;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,8 +60,18 @@ public class LoadBalancer extends UnicastRemoteObject implements LoadBalancerInt
     public static void main(String[] args) {
         try {
             LoadBalancer loadbalancerserver = new LoadBalancer();
-            java.rmi.registry.LocateRegistry.createRegistry(2000).rebind("LoadBalancerServer", loadbalancerserver);
-            System.out.println("Load Balancer ist gestartet...");
+
+            InetAddress localhost = InetAddress.getLocalHost();
+            String currentIP = localhost.getHostAddress();
+            int serverPort = 2000;
+
+            String link = "rmi://" + currentIP + ":" + serverPort + "/LoadBalancerServer";
+
+            LocateRegistry.createRegistry(serverPort);
+            Naming.rebind(link, loadbalancerserver);
+
+            //java.rmi.registry.LocateRegistry.createRegistry(2000).rebind("LoadBalancerServer", loadbalancerserver);
+            System.out.println("Load Balancer ist auf " + link + " gestartet...");
         } catch (Exception e) {
             System.err.println("Load Balancer exception:");
             e.printStackTrace();
