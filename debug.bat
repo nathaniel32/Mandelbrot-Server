@@ -13,9 +13,9 @@ Start java LoadBalancer
 timeout /t 5 /nobreak  >nul
 
 rem z.B. 3 Server (Worker)
-Start java Server
-Start java Server
-Start java Server
+Start java Server localhost
+Start java Server 127.0.0.1
+Start java Server localhost
 timeout /t 5 /nobreak  >nul
 
 rem z.B. 5 Client

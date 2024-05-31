@@ -236,27 +236,31 @@ public class Server extends UnicastRemoteObject implements ServerInterface, Acti
     //##############################################################################################
 
     public static void main(String[] args) {
-        try {
-            Server server = new Server();
-            LoadBalancerInterface loadbalancer = (LoadBalancerInterface) java.rmi.registry.LocateRegistry.getRegistry("localhost", 2000).lookup("LoadBalancerServer");
-
-            int serverPort = loadbalancer.getPort();
-
-            InetAddress localhost = InetAddress.getLocalHost();
-            String currentIP = localhost.getHostAddress(); //"0.0.0.0";
-            String link = "rmi://" + currentIP + ":" + serverPort + "/WorkerServer";
-
-            //java.rmi.registry.LocateRegistry.createRegistry(serverPort).rebind(link, server); geht nicht!
-            //java.rmi.registry.LocateRegistry.createRegistry(serverPort).rebind("WorkerServer", server);
-            java.rmi.registry.LocateRegistry.createRegistry(serverPort).rebind("WorkerServer", server);
-
-            server.setUrl(link);
-            server.setGUI(loadbalancer, server);
-            loadbalancer.registerServer(server);
-            System.out.println("Server ist gestartet...\n" + link + "\n\n");
-        } catch (Exception e) {
-            System.err.println("Server exception:");
-            e.printStackTrace();
+        if (args.length != 0){
+            try {
+                Server server = new Server();
+                LoadBalancerInterface loadbalancer = (LoadBalancerInterface) java.rmi.registry.LocateRegistry.getRegistry(args[0], 2000).lookup("LoadBalancerServer");
+    
+                int serverPort = loadbalancer.getPort();
+    
+                InetAddress localhost = InetAddress.getLocalHost();
+                String currentIP = localhost.getHostAddress(); //"0.0.0.0";
+                String link = "rmi://" + currentIP + ":" + serverPort + "/WorkerServer";
+    
+                //java.rmi.registry.LocateRegistry.createRegistry(serverPort).rebind(link, server); geht nicht!
+                //java.rmi.registry.LocateRegistry.createRegistry(serverPort).rebind("WorkerServer", server);
+                java.rmi.registry.LocateRegistry.createRegistry(serverPort).rebind("WorkerServer", server);
+    
+                server.setUrl(link);
+                server.setGUI(loadbalancer, server);
+                loadbalancer.registerServer(server);
+                System.out.println("Server ist gestartet...\n" + link + "\n\n");
+            } catch (Exception e) {
+                System.err.println("Server exception:");
+                e.printStackTrace();
+            }
+        }else{
+            System.out.println("Erforderliche Parameter: IP");
         }
     }
 }

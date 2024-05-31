@@ -46,8 +46,10 @@ javac Server.java
 4. Starten Sie den Server:
 
 ```bash
-java Server
+java Server <LoadBalancer_IP>
 ```
+
+Ersetzen Sie `<LoadBalancer_IP>` durch die tatsächliche IP-Adresse des Computers, auf dem der Lastenausgleich ausgeführt wird.
 
 Wiederholen Sie die oben genannten Schritte, um weitere Serverinstanzen zu starten.
 
@@ -84,11 +86,11 @@ javac LoadBalancer.java
 java LoadBalancer
 ```
 
-2. Starten Sie mehrere Serverinstanzen:
+2. Starten Sie mehrere Serverinstanzen und stellen Sie eine Verbindung zum Lastenausgleich unter `192.168.1.100` her:
 
 ```bash
 javac Server.java
-java Server
+java Server 192.168.1.100
 ```
 
 3. Starten Sie mehrere Clientinstanzen und stellen Sie eine Verbindung zum Lastenausgleich unter `192.168.1.100` her:
