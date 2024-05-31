@@ -39,33 +39,37 @@ public class Client extends UnicastRemoteObject implements ClientInterface {
     }
 
     public static void main(String[] args) {
-        try {
-            Random random = new Random();
-            int randomNumber = random.nextInt(100);
-            
-            Client client = new Client("CL" + randomNumber);
-
-            LoadBalancerInterface loadbalancer = (LoadBalancerInterface) java.rmi.registry.LocateRegistry.getRegistry("localhost", 2000).lookup("LoadBalancerServer");
-            String serverUrl = loadbalancer.getBalanceServerUrl();
-
-            System.out.println(serverUrl);
-
-            //ServerInterface server = (ServerInterface) java.rmi.registry.LocateRegistry.getRegistry("localhost", 9000).lookup("ChatServer");
-            //ServerInterface server = (ServerInterface) java.rmi.registry.LocateRegistry.getRegistry("localhost", 9000).lookup("ChatServer");
-            //ServerInterface server = (ServerInterface) java.rmi.registry.LocateRegistry.getRegistry(serverUrl);
-            ServerInterface server = (ServerInterface) Naming.lookup(serverUrl);
-            server.registerClient(client);
-            System.out.println("Client ID: "+ client.getId() +".\nSie haben eine Verbindung zum Server-Url: " + serverUrl + " hergestellt\n\n");
-            server.broadcastMessage(client.getId() + " Connected");
-
-            ApfelPresenter p = new ApfelPresenter();
-            ApfelView v = new ApfelView(p);
-            ApfelModel m = new ApfelModel(v);
-            p.setModelAndView(m, v, server, client);
-            p.apfel(server);
-        } catch (Exception e) {
-            System.err.println("Client exception:");
-            e.printStackTrace();
+        if (args.length != 0) {
+            try {
+                Random random = new Random();
+                int randomNumber = random.nextInt(100);
+                
+                Client client = new Client("CL" + randomNumber);
+    
+                LoadBalancerInterface loadbalancer = (LoadBalancerInterface) java.rmi.registry.LocateRegistry.getRegistry(args[0], 2000).lookup("LoadBalancerServer");
+                String serverUrl = loadbalancer.getBalanceServerUrl();
+    
+                System.out.println(serverUrl);
+    
+                //ServerInterface server = (ServerInterface) java.rmi.registry.LocateRegistry.getRegistry("localhost", 9000).lookup("ChatServer");
+                //ServerInterface server = (ServerInterface) java.rmi.registry.LocateRegistry.getRegistry("localhost", 9000).lookup("ChatServer");
+                //ServerInterface server = (ServerInterface) java.rmi.registry.LocateRegistry.getRegistry(serverUrl);
+                ServerInterface server = (ServerInterface) Naming.lookup(serverUrl);
+                server.registerClient(client);
+                System.out.println("Client ID: "+ client.getId() +".\nSie haben eine Verbindung zum Server-Url: " + serverUrl + " hergestellt\n\n");
+                server.broadcastMessage(client.getId() + " Connected");
+    
+                ApfelPresenter p = new ApfelPresenter();
+                ApfelView v = new ApfelView(p);
+                ApfelModel m = new ApfelModel(v);
+                p.setModelAndView(m, v, server, client);
+                p.apfel(server);
+            } catch (Exception e) {
+                System.err.println("Client exception:");
+                e.printStackTrace();
+            }
+        }else{
+            System.out.println("Erforderliche Parameter: IP");
         }
     }
 }
